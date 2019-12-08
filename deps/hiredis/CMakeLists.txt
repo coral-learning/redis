@@ -1,8 +1,8 @@
 add_library(hiredis STATIC
+        async.c
+        dict.c
         hiredis.c
         net.c
-        dict.c
-        net.c
+        read.c
         sds.c
-        async.c
         )
