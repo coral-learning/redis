@@ -4251,9 +4251,9 @@ int main(int argc, char **argv) {
 
     /* We need to initialize our libraries, and the server configuration. */
 #ifdef INIT_SETPROCTITLE_REPLACEMENT
-    spt_init(argc, argv);
+    spt_init(argc, argv);     //* 这个文件接口实现没什么好说的，作用是实现修改进程名称，目的是显示argv[0]和地址，端口号
 #endif
-    setlocale(LC_COLLATE,"");
+    setlocale(LC_COLLATE,""); //* 设置或读取地域化信息
     tzset(); /* Populates 'timezone' global. */
     zmalloc_set_oom_handler(redisOutOfMemoryHandler);
     srand(time(NULL)^getpid());
@@ -4263,7 +4263,7 @@ int main(int argc, char **argv) {
     getRandomHexChars(hashseed,sizeof(hashseed));
     dictSetHashFunctionSeed((uint8_t*)hashseed);
     server.sentinel_mode = checkForSentinelMode(argc,argv);
-    initServerConfig();
+    initServerConfig();   //初始化服务器默认配置
     moduleInitModulesSystem();
 
     /* Store the executable path and arguments in a safe place in order
