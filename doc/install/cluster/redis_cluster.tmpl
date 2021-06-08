@@ -1,5 +1,5 @@
 # redis端口
-port 7009
+port ${PORT}
 
 # 关闭保护模式
 protected-mode no
@@ -14,11 +14,11 @@ cluster-config-file nodes.conf
 cluster-node-timeout 5000
 
 # 集群节点IP host模式为宿主机IP
-cluster-announce-ip 127.0.0.1
+cluster-announce-ip 10.10.100.197
 
 # 集群节点端口 7000 - 7005
-cluster-announce-port 7005
-cluster-announce-bus-port 17005
+cluster-announce-port ${PORT}
+cluster-announce-bus-port 1${PORT}
 
 # 开启 appendonly 备份模式
 appendonly yes
