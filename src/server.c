@@ -2769,11 +2769,16 @@ int processCommand(client *c) {
         return C_OK;
     }
 
+
     /* Exec the command */
     if (c->flags & CLIENT_MULTI &&
         c->cmd->proc != execCommand && c->cmd->proc != discardCommand &&
         c->cmd->proc != multiCommand && c->cmd->proc != watchCommand)
     {
+
+        // 在事务上下文中
+        // 除 EXEC 、 DISCARD 、 MULTI 和 WATCH 命令之外
+        // 其他所有命令都会被入队到事务队列中
         queueMultiCommand(c);
         addReply(c,shared.queued);
     } else {
