@@ -191,7 +191,7 @@ end
 这个脚本可以通过 EVAL ...script... 1 resource-name token-value 命令来调用。
 
 ### 源码分析
-* 流程调用以redis5.0版本为例，set command流程（倒序调用debug偷懒）如下：
+* 流程调用以redis5.0版本为例，set command流程）如下：
 
 ```
 start 0x00007fff6957ecc9
@@ -212,7 +212,8 @@ processCommand server.c:2785
     //getNodeByQuery(获取节点与当前节点对比,判断该节点是否存储该数据，存在执行正常流程，不存在通过 clusterRedirectClient函数返回客户端
     //包含key不存在，节点挂了，已经迁移等情况
 call server.c:2478
-    //进行计时调用，c->cmd->proc(c);分发执行调用setCommand，进行慢查询日志记录，只记录大于配置时间的
+    //进行计时调用，c->cmd->proc(c);分发执行调用setCommand，
+    //慢查询日志记录，只记录大于配置时间的
 setCommand t_string.c:139
     //调用setGenericCommand【数据类型】
 setGenericCommand t_string.c:86

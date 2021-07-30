@@ -641,48 +641,15 @@ public static void insertData(){
 要减少 redis 中的数据，除了选用合适的数据类型、利用共享对象等，还有一点是要设置合理的数据回收策略（maxmemory-policy），当内存达到一定量后，根据不同的优先级对内存进行回收。
 
 # []()六、参考文献
-
+* https://www.cnblogs.com/kismetv/p/8654978.html
+```
 《Redis 开发与运维》
-
 《Redis 设计与实现》
-
 https://redis.io/documentation
-
 http://redisdoc.com/server/info.html
-
 https://www.cnblogs.com/lhcpig/p/4769397.html
-
 https://searchdatabase.techtarget.com.cn/7-20218/
-
 http://www.cnblogs.com/mushroom/p/4738170.html
-
 http://www.imooc.com/article/3645
-
 http://blog.csdn.net/zhengpeitao/article/details/76573053
-
-**创作不易，如果文章对你有帮助，就点个赞、评个论呗~**
-
-**创作不易，如果文章对你有帮助，就点个赞、评个论呗~**
-
-**创作不易，如果文章对你有帮助，就点个赞、评个论呗~**
-
-分类: [Redis](https://www.cnblogs.com/kismetv/category/1186633.html)
-
-标签: [redis](https://www.cnblogs.com/kismetv/tag/redis/), [内存模型](https://www.cnblogs.com/kismetv/tag/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/), [对象类型](https://www.cnblogs.com/kismetv/tag/%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B/), [内存估算](https://www.cnblogs.com/kismetv/tag/%E5%86%85%E5%AD%98%E4%BC%B0%E7%AE%97/), [内存优化](https://www.cnblogs.com/kismetv/tag/%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/), [jemalloc](https://www.cnblogs.com/kismetv/tag/jemalloc/), [SDS](https://www.cnblogs.com/kismetv/tag/SDS/), [RedisObject](https://www.cnblogs.com/kismetv/tag/RedisObject/), [内存碎片](https://www.cnblogs.com/kismetv/tag/%E5%86%85%E5%AD%98%E7%A2%8E%E7%89%87/)
-[好文要顶]() [关注我]() [收藏该文]() [![](https://common.cnblogs.com/images/icon_weibo_24.png)]("分享至新浪微博") [![](https://common.cnblogs.com/images/wechat.png)]("分享至微信")
-
-[![](https://pic.cnblogs.com/face/1174710/20180329153616.png)](https://home.cnblogs.com/u/kismetv/)
-
-[编程迷思](https://home.cnblogs.com/u/kismetv/)
-[关注 - 2](https://home.cnblogs.com/u/kismetv/followees/)
-[粉丝 - 679](https://home.cnblogs.com/u/kismetv/followers/)
-
-[+加关注]()
-200
-
-0
-
-[«](https://www.cnblogs.com/kismetv/p/7806063.html) 上一篇： [详解 tomcat 的连接数与线程池](https://www.cnblogs.com/kismetv/p/7806063.html '发布于 2017-11-09 08:51')
-[»](https://www.cnblogs.com/kismetv/p/8757260.html) 下一篇： [Spring 中获取 request 的几种方法，及其线程安全性分析](https://www.cnblogs.com/kismetv/p/8757260.html '发布于 2018-04-10 08:26')
-
-posted @ 2018-03-27 08:53 [编程迷思](https://www.cnblogs.com/kismetv/) 阅读(41388) 评论(77) [编辑](https://i.cnblogs.com/EditPosts.aspx?postid=8654978) [收藏]()
+```

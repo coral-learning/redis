@@ -672,39 +672,16 @@ info Replication 中展示的大部分内容在文章中都已经讲述，这里
 主从复制虽然解决或缓解了数据冗余、故障恢复、读负载均衡等问题，但其缺陷仍很明显：故障恢复无法自动化；写操作无法负载均衡；存储能力受到单机的限制；这些问题的解决，需要哨兵和集群的帮助，我将在后面的文章中介绍，欢迎关注。
 
 # 参考文献
-
+ 
+https://www.cnblogs.com/kismetv/p/9236731.html
+```
 《Redis 开发与运维》
-
 《Redis 设计与实现》
-
 《Redis 实战》
-
 http://mdba.cn/2015/03/16/redis复制中断问题-慢查询/
-
 https://redislabs.com/blog/top-redis-headaches-for-devops-replication-buffer/
-
 http://mdba.cn/2015/03/17/redis主从复制（2）-replication-buffer与replication-backlog/
-
 [https://github.com/antirez/redis/issues/918](https://github.com/antirez/redis/issues/918)
-
 https://blog.csdn.net/qbw2010/article/details/50496982
-
 https://mp.weixin.qq.com/s?__biz=MzIxMzEzMjM5NQ==&mid=2651029484&idx=1&sn=5882f4c7c390a0a0e4f6dfd872e203b5&chksm=8c4caae8bb3b23fe77909e307d45a071186f55069e5207602c61383eab573885615c1d835904&mpshare=1&scene=1&srcid=0327SokqtxEY3WojWNDMHLYl/#rd
-
----
-
-分类: [Redis](https://www.cnblogs.com/kismetv/category/1186633.html)
-
-标签: [redis](https://www.cnblogs.com/kismetv/tag/redis/), [主从复制](https://www.cnblogs.com/kismetv/tag/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/), [高可用](https://www.cnblogs.com/kismetv/tag/%E9%AB%98%E5%8F%AF%E7%94%A8/), [全量复制](https://www.cnblogs.com/kismetv/tag/%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6/), [部分复制](https://www.cnblogs.com/kismetv/tag/%E9%83%A8%E5%88%86%E5%A4%8D%E5%88%B6/), [repl-timeout](https://www.cnblogs.com/kismetv/tag/repl-timeout/), [client-output-buffer-limit](https://www.cnblogs.com/kismetv/tag/client-output-buffer-limit/), [读写分离](https://www.cnblogs.com/kismetv/tag/%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/), [REPLCONF ACK](https://www.cnblogs.com/kismetv/tag/REPLCONF%20ACK/), [不一致](https://www.cnblogs.com/kismetv/tag/%E4%B8%8D%E4%B8%80%E8%87%B4/)
-[好文要顶]() [关注我]() [收藏该文]() [![](https://common.cnblogs.com/images/icon_weibo_24.png)]("分享至新浪微博") [![](https://common.cnblogs.com/images/wechat.png)]("分享至微信")
-
-[![](https://pic.cnblogs.com/face/1174710/20180329153616.png)](https://home.cnblogs.com/u/kismetv/)
-
-[编程迷思](https://home.cnblogs.com/u/kismetv/)
-[关注 - 2](https://home.cnblogs.com/u/kismetv/followees/)
-[粉丝 - 679](https://home.cnblogs.com/u/kismetv/followers/)
-
-[«](https://www.cnblogs.com/kismetv/p/9137897.html) 上一篇： [深入学习 Redis（2）：持久化](https://www.cnblogs.com/kismetv/p/9137897.html '发布于 2018-06-06 08:35')
-[»](https://www.cnblogs.com/kismetv/p/9266224.html) 下一篇： [谈谈微信支付曝出的漏洞](https://www.cnblogs.com/kismetv/p/9266224.html '发布于 2018-07-05 07:31')
-
-posted @ 2018-06-28 09:03 [编程迷思](https://www.cnblogs.com/kismetv/) 阅读(18671) 评论(25) [编辑](https://i.cnblogs.com/EditPosts.aspx?postid=9236731) [收藏]()
+```
