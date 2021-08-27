@@ -1,15 +1,34 @@
 ## 基础环境准备
+
 * mac
 * docker version 20.10.5
 * redis version redis:5.0
 
 ### redis 单机
 
+```
+docker stop redis-6379
+docker rm redis-6379
+docker run -d -p 6379:6379  --name redis-6379  --privileged=true redis:3.2 redis-server --port 6379
+docker update redis-6379 --restart=always
+```
 
 ### redis 哨兵
 
+```
+vim sentinel.conf
+sentinel monitor mymaster 10.10.220.120 6379 1
+
+启动sentinel
+docker stop redis-sentinel-26379
+docker rm redis-sentinel-26379
+docker run -d -p 26379:26379 -v /Users/wuhao/data/soft/redis/sentinel.conf:/usr/local/bin/redis-conf/sentinel.conf --name redis-sentinel-26379  redis:3.2 redis-sentinel /usr/local/bin/redis-conf/sentinel.conf --port 26379
+docker logs -f redis-sentinel-26379
+
+```
 
 ### redis 集群
+
 #### 拉取redis官方镜像
 
 ```
@@ -17,6 +36,7 @@ docker pull redis:5.0
 ```
 
 #### 创建配置文件和数据目录
+
 ```
 mkdir ~/rcluster
 ```
@@ -54,6 +74,7 @@ auto-aof-rewrite-min-size 5120mb
 # 关闭快照备份
 save ""
 ```
+
 #### 批量生成配置
 
 vim ~/rcluster/rcbuild.sh
@@ -101,8 +122,6 @@ chmod 777 ~/rcluster/rcrun.sh
 如不需要限制内存，可以去掉--memeory参数。
 
 ```
-
-
 
 #### 创建集群
 
@@ -173,7 +192,6 @@ M: dff97323bee2cd4b32f9a49685092469b0379259 127.0.0.1:7002
 
 * 安装redis-cli命令（如已有可跳过此步）：
 
-
 ```
 redis tool
 sudo apt install redis-tools
@@ -195,23 +213,25 @@ dff97323bee2cd4b32f9a49685092469b0379259 127.0.0.1:7002@17002 master - 0 1619769
 
 ```
 
-
 #### 将节点加入集群
 
 * add node
+
 ```
 redis-cli --cluster add-node 127.0.0.1:6385 127.0.0.1:6379
 ```
 
-* rehash
-  （2）添加master节点
+* 添加master节点
 
+```
 redis-cli --cluster add-node 127.0.0.1:6385 127.0.0.1:6379
+```
 
 这里是将节点加入了集群中，但是并没有分配slot，所以这个节点并没有真正的开始分担集群工作。
 
-（3）分配slot
+* 分配slot
 
+```
 redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from 2846540d8284538096f111a8ce7cf01c50199237,e0a9c3e60eeb951a154d003b9b28bbdc0be67d5b,692dec0ccd6bdf68ef5d97f145ecfa6d6bca6132 --cluster-to 46f0b68b3f605b3369d3843a89a2b4a164ed21e8 --cluster-slots 1024
 
 --cluster-from：表示slot目前所在的节点的node ID，多个ID用逗号分隔
@@ -219,9 +239,11 @@ redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from 2846540d8284538096f111
 --cluster-to：表示需要新分配节点的node ID（貌似每次只能分配一个）
 
 --cluster-slots：分配的slot数量
+```
 
-（4）添加slave节点
+* 添加slave节点
 
+```
 redis-cli --cluster add-node 127.0.0.1:6386 127.0.0.1:6385 --cluster-slave --cluster-master-id 46f0b68b3f605b3369d3843a89a2b4a164ed21e8
 
 add-node: 后面的分别跟着新加入的slave和slave对应的master
@@ -229,43 +251,45 @@ add-node: 后面的分别跟着新加入的slave和slave对应的master
 cluster-slave：表示加入的是slave节点
 
 --cluster-master-id：表示slave对应的master的node ID
+```
 
-4、收缩集群
+#### 收缩集群
 
 下线节点127.0.0.1:6385（master）/127.0.0.1:6386（slave）
 
-（1）首先删除master对应的slave
-
-redis-cli --cluster del-node 127.0.0.1:6386 530cf27337c1141ed12268f55ba06c15ca8494fc
+* 首先删除master对应的slave
 
 del-node后面跟着slave节点的 ip:port 和node ID
 
-（2）清空master的slot
+```
+redis-cli --cluster del-node 127.0.0.1:6386 530cf27337c1141ed12268f55ba06c15ca8494fc
+```
 
+* 清空master的slot
+
+```
 redis-cli --cluster reshard 127.0.0.1:6385 --cluster-from 46f0b68b3f605b3369d3843a89a2b4a164ed21e8 --cluster-to 2846540d8284538096f111a8ce7cf01c50199237 --cluster-slots 1024 --cluster-yes
+```
 
 reshard子命令前面已经介绍过了，这里需要注意的一点是，由于我们的集群一共有四个主节点，而每次reshard只能写一个目的节点，因此以上命令需要执行三次（--cluster-to对应不同的目的节点）。
 
 --cluster-yes：不回显需要迁移的slot，直接迁移。
 
-（3）下线（删除）节点
+* 下线（删除）节点
 
+```
 redis-cli --cluster del-node 127.0.0.1:6385 46f0b68b3f605b3369d3843a89a2b4a164ed21e8
+```
 
 至此就是redis cluster 简单的操作过程
 
-
-
-
 #### 设置集群密码
 
-设置密码为什么不在上面的步骤，利用模板文件批量创建配置文件的时候就写进去？
-无论是在 redis5.x 版本，还是以前的 redis 版本利用 ruby 创建集群的方式，
-在redis-cli --cluster create创建集群的环节没有密码参数配置，所以我们需要创建完集群再设置密码。
-
+设置密码为什么不在上面的步骤，利用模板文件批量创建配置文件的时候就写进去？ 
+无论是在 redis5.x 版本， 还是以前的 redis 版本利用 ruby 创建集群的方式， 在redis-cli --cluster
+create创建集群的环节没有密码参数配置，所以我们需要创建完集群再设置密码。
 我们用config set方式分别为每一个节点设置相同的密码（不需要重启 redis，且重启后依然有效），
-在此之前先给所有 redis 配置文件加w权限，不然密码无法保存到文件。
-注意当前路径依然是在~/rcluster/：
+在此之前先给所有 redis 配置文件加w权限，不然密码无法保存到文件。 注意当前路径依然是在~/rcluster/：
 
 ```
 for port in `seq 7000 7005`; do \
@@ -274,10 +298,13 @@ done
 ```
 
 * 登录一个节点：
+
 ```
 redis-cli -c -p 7000
 ```
+
 * 设置密码：
+
 ```
 127.0.0.1:7000> config set masterauth 123456
 OK
@@ -293,11 +320,12 @@ OK
 
 ```
 
-
 * 随便登录一个集群节点：
+
 ```
 redis-cli -c -p 7005 -a 123456 
 ```
+
 * 写入数据
 
 ```
@@ -310,13 +338,12 @@ OK
 (integer) 1
 ```
 
-可以看到，集群中任意节点写入数据，在其他任意节点都能读到。
-至此，redis 集群搭建完成。
-
+可以看到，集群中任意节点写入数据，在其他任意节点都能读到。 至此，redis 集群搭建完成。
 
 #### 其他注意事项
-外网访问 redis，可能需要防火墙开放相应端口；
-如果需要删除容器，可批量操作：
+
+外网访问 redis，可能需要防火墙开放相应端口； 如果需要删除容器，可批量操作：
+
 ```
 for port in `seq 7000 7005`; do \
 docker stop redis-${port};
@@ -324,6 +351,6 @@ docker rm redis-${port};
 done
 ```
 
-
 #### refer
+
 https://blog.csdn.net/weixin_42440345/article/details/95048739

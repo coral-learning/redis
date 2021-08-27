@@ -1,14 +1,13 @@
 ### 一、基本定义
 
-RedisCluster是Redis的集群实现，内置数据自动分片机制，集群内部将所有的key映射到16384个Slot中，集群中的每个RedisInstance负责其中的一部分的Slot的读写。
+RedisCluster是Redis的集群实现，内置数据自动分片机制，集群内部将所有的key映射到16384个Slot中，
+集群中的每个RedisInstance负责其中的一部分的Slot的读写。
 集群客户端连接集群中任一Redis Instance即可发送命令，当RedisInstance收到自己不负责的Slot的请求时，
-会将负责请求Key所在Slot的Redis Instance地址返回给客户端，客户端收到后自动将原请求重新发往这个地址，对外部透明。一个Key到底属于哪个Slot由crc16(key)%16384决定。
-
+会将负责请求Key所在Slot的Redis Instance地址返回给客户端，客户端收到后自动将原请求重新发往这个地址，对外部透明。
+一个Key到底属于哪个Slot由crc16(key)%16384决定。
 关于负载均衡，集群的Redis Instance之间可以迁移数据，以Slot为单位，但不是自动的，需要外部命令触发。
-
 关于集群成员管理，集群的节点(Redis Instance)和节点之间两两定期交换集群内节点信息并且更新，从发送节点的角度看，这些信息包括：集群内有哪些节点，
 IP和PORT是什么，节点名字是什么，节点的状态(比如OK，PFAIL，FAIL，后面详述)是什么，包括节点角色(master或者slave)等。
-
 关于可用性，集群由N组主从RedisInstance组成。主可以没有从，但是没有从意味着主宕机后主负责的Slot读写服务不可用。一个主可以有多个从，主宕机时，
 某个从会被提升为主，具体哪个从被提升为主，协议类似于Raft，参见这里。如何检测主宕机？RedisCluster采用quorum+心跳的机制。
 从节点的角度看，节点会定期给其他所有的节点发送Ping，cluster-node-timeout(可配置，秒级)时间内没有收到对方的回复，
