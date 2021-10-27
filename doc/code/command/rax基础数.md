@@ -4,47 +4,47 @@
 redis源码中对应的是rax.c和rax.h 源码中的说明：
 
 ```
-* 假设要存三个字符串：foo, footer, foobar
-* 这是一个没有压缩的结构
-*
-*              (f) ""
-*                \
-*                (o) "f"
-*                  \
-*                  (o) "fo"
-*                    \
-*                  [t   b] "foo"
-*                  /     \
-*         "foot" (e)     (a) "foob"
-*                /         \
-*      "foote" (r)         (r) "fooba"
-*              /             \
-*    "footer" []             [] "foobar"
+假设要存三个字符串：foo, footer, foobar
+这是一个没有压缩的结构
 
-*  我们进行一下压缩：
-*                  ["foo"] ""
-*                     |
-*                  [t   b] "foo"
-*                  /     \
-*        "foot" ("er")    ("ar") "foob"
-*                 /          \
-*       "footer" []          [] "foobar"
-* redis中基本就是这个样子
+             (f) ""
+               \
+               (o) "f"
+                 \
+                 (o) "fo"
+                   \
+                 [t   b] "foo"
+                 /     \
+        "foot" (e)     (a) "foob"
+               /         \
+     "foote" (r)         (r) "fooba"
+             /             \
+   "footer" []             [] "foobar"
 
-* 如果我们再插入一个first:
-*
-*                    (f) ""
-*                    /
-*                 (i o) "f"
-*                 /   \
-*    "firs"  ("rst")  (o) "fo"
-*              /        \
-*    "first" []       [t   b] "foo"
-*                     /     \
-*           "foot" ("er")    ("ar") "foob"
-*                    /          \
-*          "footer" []          [] "foobar"
-* 那就变成了这个样子
+ 我们进行一下压缩：
+                 ["foo"] ""
+                    |
+                 [t   b] "foo"
+                 /     \
+       "foot" ("er")    ("ar") "foob"
+                /          \
+      "footer" []          [] "foobar"
+redis中基本就是这个样子
+
+如果我们再插入一个first:
+
+                   (f) ""
+                   /
+                (i o) "f"
+                /   \
+   "firs"  ("rst")  (o) "fo"
+             /        \
+   "first" []       [t   b] "foo"
+                    /     \
+          "foot" ("er")    ("ar") "foob"
+                   /          \
+         "footer" []          [] "foobar"
+那就变成了这个样子
   基本了解之后，来看一下基本概念
 ```
 结构 看一下，一个节点是什么样的
@@ -53,19 +53,19 @@ redis源码中对应的是rax.c和rax.h 源码中的说明：
 对应的结构体定义：
 ```
 typedef struct raxNode {
-    uint32_t iskey:1;     /* Does this node contain a key? */
-    uint32_t isnull:1;    /* Associated value is NULL (don't store it). */
-    uint32_t iscompr:1;   /* Node is compressed. */
-    uint32_t size:29;     /* Number of children, or compressed string len. */
+    uint32_t iskey:1;     /Does this node contain a key? */
+    uint32_t isnull:1;    /Associated value is NULL (don't store it). */
+    uint32_t iscompr:1;   /Node is compressed. */
+    uint32_t size:29;     /Number of children, or compressed string len. */
     unsigned char data[];
 } raxNode;
 ```
 一个node有5个部分
 
-* iskey:如果为1，那表示前面的字符串组成一个完整的Key
-* isnull:字符串是可以对应有一个value指针的，就像key-value的对应关系；这个value可以是NULL
-* iscompr:是否压缩节点
-* size: 该节点含有的字符串长度，注意，并不是data数组的长度
+iskey:如果为1，那表示前面的字符串组成一个完整的Key
+isnull:字符串是可以对应有一个value指针的，就像key-value的对应关系；这个value可以是NULL
+iscompr:是否压缩节点
+size: 该节点含有的字符串长度，注意，并不是data数组的长度
 
 假设现在有一个节点存储了"abc"这3个字符：
 
@@ -101,7 +101,7 @@ iscompr为1
 理解了这个过程，再看代码就会容易很多
 （假设指针大小为4字节）
 
-* 刚新建
+刚新建
 rax结构体表示rax树
 raxNode结构体表示rax树中的节点
 ```
@@ -114,10 +114,10 @@ typedef struct rax {
 rax->head指向下面这个raxNode
 
 typedef struct raxNode {
-    uint32_t iskey:1;     /* Does this node contain a key? */
-    uint32_t isnull:1;    /* Associated value is NULL (don't store it). */
-    uint32_t iscompr:1;   /* Node is compressed. */
-    uint32_t size:29;     /* Number of children, or compressed string len. */
+    uint32_t iskey:1;     /Does this node contain a key? */
+    uint32_t isnull:1;    /Associated value is NULL (don't store it). */
+    uint32_t iscompr:1;   /Node is compressed. */
+    uint32_t size:29;     /Number of children, or compressed string len. */
 
     unsigned char data[];
 } raxNode;
@@ -125,7 +125,7 @@ typedef struct raxNode {
 ```
 刚新建的时候，只有一个空节点
 
-* 插入abcdefg
+插入abcdefg
 
 rax是可以保存key->value的，key是字符串，value任意
 因此需要区分有没有value，raxNode->isnull为1表示没有value，为0表示有
@@ -230,7 +230,7 @@ uint32_t size        // 2
 
     unsigned char data[];
     //内存对齐，有2个字符d和x（按照字符升序排列），实际占用了4个字节，最后有2个指针
-    // dx__ node* node*
+    // dx__ nodenode*
 } raxNode;
 因为这里分出了2条字符串，所以node4 有2个字符，作为2个引导字符，也有2个node指针，指向后续的字符串
 
@@ -245,7 +245,7 @@ uint32_t size        // 3
 
     unsigned char data[];
     //内存对齐，有3个字符efg，实际占用了4个字节，最后有1个指针
-    // efg_ node* 
+    // efg_ node
 } raxNode;
 最后的这个指针指向原来那个node2，node2:
 
@@ -274,7 +274,7 @@ uint32_t size        // 2
 
     unsigned char data[];
     //内存对齐，有2个字符yz，实际占用了4个字节，最后有1个指针
-    // yz__ node* 
+    // yz__ node
 } raxNode;
 再新建一个node7，和node2一样，作为结尾；node6最后的指针指向node7
 
@@ -320,7 +320,7 @@ uint32_t iscompr     // 1
 uint32_t size        // 2
 
     unsigned char data[];
-    //ab__ node* void*(取决于node3有没有data)
+    //ab__ nodevoid*(取决于node3有没有data)
 } raxNode;
 然后新建node10，node9后面是node10
 
@@ -332,7 +332,7 @@ uint32_t iscompr     // 1
 uint32_t size        // 1
 
     unsigned char data[];
-    //c___ node* void*(取决于node3有没有data)
+    //c___ nodevoid*(取决于node3有没有data)
     //node*指向node4，后面保持一致
 } raxNode;
 node3释放
@@ -359,7 +359,7 @@ uint32_t size        // 2
 
     unsigned char data[];
     //内存对齐，有2个字符yz，实际占用了4个字节，最后有1个指针
-    // yz__ node* 
+    // yz__ node
 } raxNode;
 由于前面的组成key，node6->iskey=1，rax->numele++
 

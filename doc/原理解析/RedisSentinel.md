@@ -384,14 +384,3 @@ failover-timeout 的默认值是 180000，即 180s；如果超时，则下一次
 《Redis 开发与运维》
 
 《Redis 设计与实现》
-
-分类: [Redis](https://www.cnblogs.com/kismetv/category/1186633.html)
-
-标签: [哨兵](https://www.cnblogs.com/kismetv/tag/%E5%93%A8%E5%85%B5/), [sentinel](https://www.cnblogs.com/kismetv/tag/sentinel/), [客户端](https://www.cnblogs.com/kismetv/tag/%E5%AE%A2%E6%88%B7%E7%AB%AF/), [redis 高可用](https://www.cnblogs.com/kismetv/tag/redis%E9%AB%98%E5%8F%AF%E7%94%A8/), [故障转移](https://www.cnblogs.com/kismetv/tag/%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB/), [故障恢复](https://www.cnblogs.com/kismetv/tag/%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D/)
-[好文要顶]() [关注我]() [收藏该文]() [![](https://common.cnblogs.com/images/icon_weibo_24.png)]("分享至新浪微博") [![](https://common.cnblogs.com/images/wechat.png)]("分享至微信")
-
-[![](https://pic.cnblogs.com/face/1174710/20180329153616.png)](https://home.cnblogs.com/u/kismetv/)
-
-[编程迷思](https://home.cnblogs.com/u/kismetv/)
-[关注 - 2](https://home.cnblogs.com/u/kismetv/followees/)
-[粉丝 - 679](https://home.cnblogs.com/u/kismetv/followers/)
